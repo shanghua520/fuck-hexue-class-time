@@ -9,53 +9,53 @@ logidall = []
 
 
 def login(username, pwd, appId):
-    reps = requests.post(r'http://api.sdcen.cn/mobile/api/login', {'username': username, "pwd": pwd}).text
+    reps = requests.post(r'http://api.hnscen.cn/mobile/api/login', {'username': username, "pwd": pwd}).text
     logininfo = json.loads(reps)
     return logininfo
 
 
 def getuserinfo(auth_fix):
-    reps = requests.post(r'http://api.sdcen.cn/mobile/api/GetUserInfo', {'auth_fix': auth_fix}).text
+    reps = requests.post(r'http://api.hnscen.cn/mobile/api/GetUserInfo', {'auth_fix': auth_fix}).text
     userinfo = json.loads(reps)
     userinfodata = userinfo['data']
     print(userinfodata['Name'], userinfodata['ClassName'], userinfodata['MajorName'])
 
 
 def myscore(auth_fix):
-    reps = requests.post(r'http://api.sdcen.cn/mobile/api/new/MyScore', {'auth_fix': auth_fix}).text
+    reps = requests.post(r'http://api.hnscen.cn/mobile/api/new/MyScore', {'auth_fix': auth_fix}).text
     scoreinfo = json.loads(reps)
     return scoreinfo
 
 
 def MyCourse(auth_fix):
-    reps = requests.post(r'http://api.sdcen.cn/mobile/api/new/MyCourse', {'auth_fix': auth_fix}).text
+    reps = requests.post(r'http://api.hnscen.cn/mobile/api/new/MyCourse', {'auth_fix': auth_fix}).text
     Courseinfo = json.loads(reps)
     return Courseinfo
 
 
 def GetCourseInfo(auth_fix, courseOpenId):
-    reps = requests.post(r'http://api.sdcen.cn/mobile/api/GetCourseInfo',
+    reps = requests.post(r'http://api.hnscen.cn/mobile/api/GetCourseInfo',
                          {'auth_fix': auth_fix, 'courseOpenId': courseOpenId}).text
     CourseInfo = json.loads(reps)
     return CourseInfo
 
 
 def GetCourseeProcess(auth_fix, courseOpenId):
-    reps = requests.post(r'http://api.sdcen.cn/mobile/api/GetCourseeProcess',
+    reps = requests.post(r'http://api.hnscen.cn/mobile/api/GetCourseeProcess',
                          {'auth_fix': auth_fix, 'courseOpenId': courseOpenId}).text
     CourseeProcess = json.loads(reps)
     return CourseeProcess
 
 
 def GetCellInfo(auth_fix, cellid, isIOS):
-    reps = requests.post(r'http://api.sdcen.cn/mobile/api/GetCellInfo',
+    reps = requests.post(r'http://api.hnscen.cn/mobile/api/GetCellInfo',
                          {'auth_fix': auth_fix, 'cellid': cellid, 'isIOS': isIOS}).text
     CellInfo = json.loads(reps)
     return CellInfo
 
 
 def UpdateLogInfo(auth_fix, videoEndTime, logId, CellLogId):
-    reps = requests.post(r'http://api.sdcen.cn/mobile/api/UpdateLogInfo',
+    reps = requests.post(r'http://api.hnscen.cn/mobile/api/UpdateLogInfo',
                          {'auth_fix': auth_fix, 'videoEndTime': videoEndTime, 'cellLogId': CellLogId,
                           'LogId': logId}).text
     return reps
