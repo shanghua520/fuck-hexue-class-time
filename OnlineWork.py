@@ -31,19 +31,15 @@ def getPaper(UserId, WorkId):
     return homeworkContextInfo
 
 
-def SplicingAnswer(answer):
-    strAnswer = ''
-    for i in answer:
-        if i == '0':
-            strAnswer += 'A'
-        if i == '1':
-            strAnswer += 'B'
-        if i == '2':
-            strAnswer += 'C'
-        if i == '3':
-            strAnswer += 'D'
-    return strAnswer
+def SaveObjectQuestion(Id, data):
+    reps = requests.post('http://api.hnscen.cn/mobile/api/SaveObjectQuestion', {'Id': Id, 'data': str(data)})
 
+
+def SaveWork(Id, data, CourseOpenId, PaperId):
+    reps = requests.post('http://api.hnscen.cn/mobile/api/SaveWork',
+                  {'Id': Id, 'data': str(data), 'Type': 2, 'CourseOpenId': CourseOpenId, 'IsSubmitWithoutAll': 1,
+                   'PaperId': PaperId})
+    return reps
 
 if __name__ == "__main__":
     # 获取登陆返回的信息
@@ -61,37 +57,30 @@ if __name__ == "__main__":
         print(index, ':课程名字：' + i['name'] + '  进度：' + str(i['process']) + '%')
     print('请选择课程：')
     index = input()
-    homeworkList = GetHomeworkList(auth, Course['course'][int(index)]['courseOpenId'])
+    courseOpenId = Course['course'][int(index)]['courseOpenId']
+    homeworkList = GetHomeworkList(auth, courseOpenId)
     for index, i in enumerate(homeworkList['data']):
         print(index, '作业名称：' + i['Name'])
     print('请选择作业：')
     index = input()
     print(homeworkList['data'][int(index)]['Id'])
     homeworkId = homeworkList['data'][int(index)]['Id']
+    print(homeworkId)
     homeworkInfo = GetHomeworkInfo(auth, homeworkId)
-    print(homeworkInfo)
     print(logininfo['userId'])
     homeworkContext = getPaper(logininfo['userId'], homeworkId)
-    print(homeworkContext)
+    PaperId = homeworkContext['Paper']['Id']
+    PaperPaperId = homeworkContext['Paper']['PaperId']
+    data = []
     for index, i in enumerate(homeworkContext['Paper']['BigQuestions']):
         print(i['Title'])
-        title = i['Title']
         for index1, j in enumerate(i['StuQuestions']):
-            if title == '判断题':
-                answer = 'A' if j['Answer'] == '1' else 'B'
-                print('判断题目：' + j['Title'] + ' 答案：' + answer)
-            if title == '单选题':
-                answer = j['Answer']
-                if answer == '0':
-                    answer = 'A'
-                if answer == '1':
-                    answer = 'B'
-                if answer == '2':
-                    answer = 'C'
-                if answer == '3':
-                    answer = 'D'
-                print('单选题目：' + j['Title'] + ' 答案：' + answer)
-            if title == '多选题':
-                answer = j['Answer']
-                lisAnswer = str(answer).split(',')
-                print('多选题目：' + j['Title'] + ' 答案：' + SplicingAnswer(lisAnswer))
+            AnswerRes = {
+                "Bindex": index,
+                "Qindex": index1,
+                "StuAnswer": j['Answer'],
+                "IsAssignmented": 1
+            }
+            SaveObjectQuestion(PaperId, AnswerRes)
+            data.append(AnswerRes)
+    print(SaveWork(PaperId,data,courseOpenId,PaperPaperId))
