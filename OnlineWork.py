@@ -60,7 +60,7 @@ if __name__ == "__main__":
     courseOpenId = Course['course'][int(index)]['courseOpenId']
     homeworkList = GetHomeworkList(auth, courseOpenId)
     for index, i in enumerate(homeworkList['data']):
-        print(index, '作业名称：' + i['Name'] + str(i['AnswerCount']))
+        print(index, '作业名称：' + i['Name'])
     print('请选择作业：')
     index = input()
     print(homeworkList['data'][int(index)]['Id'])
