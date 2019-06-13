@@ -83,4 +83,4 @@ if __name__ == "__main__":
             }
             SaveObjectQuestion(PaperId, AnswerRes)
             data.append(AnswerRes)
-    print(SaveWork(PaperId,data,courseOpenId,PaperPaperId))
+    print(SaveWork(PaperId,data,courseOpenId,PaperPaperId).text)
