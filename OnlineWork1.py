@@ -57,31 +57,32 @@ if __name__ == "__main__":
     for index, i in enumerate(Course['course']):
         print(index, ':课程名字：' + i['name'] + '  进度：' + str(i['process']) + '%')
     print('请选择课程：')
-    index = input()
-    courseOpenId = Course['course'][int(index)]['courseOpenId']
-    homeworkList = GetHomeworkList(auth, courseOpenId)
-    for index, i in enumerate(homeworkList['data']):
-        print(index, '作业名称：' + i['Name'])
-    print('请选择作业：')
-    index = input()
-    print(homeworkList['data'][int(index)]['Id'])
-    homeworkId = homeworkList['data'][int(index)]['Id']
-    print(homeworkId)
-    homeworkInfo = GetHomeworkInfo(auth, homeworkId)
-    print(logininfo['userId'])
-    homeworkContext = getPaper(logininfo['userId'], homeworkId)
-    PaperId = homeworkContext['Paper']['Id']
-    PaperPaperId = homeworkContext['Paper']['PaperId']
-    data = []
-    for index, i in enumerate(homeworkContext['Paper']['BigQuestions']):
-        print(i['Title'])
-        for index1, j in enumerate(i['StuQuestions']):
-            AnswerRes = {
-                "Bindex": index,
-                "Qindex": index1,
-                "StuAnswer": j['Answer'],
-                "IsAssignmented": 1
-            }
-            SaveObjectQuestion(PaperId, AnswerRes)
-            data.append(AnswerRes)
-    print(SaveWork(PaperId, data, courseOpenId, PaperPaperId).text)
+    index = int(input())
+    for windex in range(index, len(Course['course'])):
+        courseOpenId = Course['course'][windex]['courseOpenId']
+        homeworkList = GetHomeworkList(auth, courseOpenId)
+        for index, i in enumerate(homeworkList['data']):
+            print(index, '作业名称：' + i['Name'])
+            # print('请选择作业：')
+            # index = int(input())
+            print(homeworkList['data'][index]['Id'])
+            homeworkId = homeworkList['data'][index]['Id']
+            print(homeworkId)
+            homeworkInfo = GetHomeworkInfo(auth, homeworkId)
+            print(logininfo['userId'])
+            homeworkContext = getPaper(logininfo['userId'], homeworkId)
+            PaperId = homeworkContext['Paper']['Id']
+            PaperPaperId = homeworkContext['Paper']['PaperId']
+            data = []
+            for index, i in enumerate(homeworkContext['Paper']['BigQuestions']):
+                print(i['Title'])
+                for index1, j in enumerate(i['StuQuestions']):
+                    AnswerRes = {
+                        "Bindex": index,
+                        "Qindex": index1,
+                        "StuAnswer": j['Answer'],
+                        "IsAssignmented": 1
+                    }
+                    SaveObjectQuestion(PaperId, AnswerRes)
+                    data.append(AnswerRes)
+            print(SaveWork(PaperId, data, courseOpenId, PaperPaperId).text)

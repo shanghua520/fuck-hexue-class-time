@@ -83,24 +83,6 @@ def addke(auth, CourseeProcess):
                             return
 
 
-def threaduplogidall(auth, Courseinfo, index):
-    while True:
-        if len(logidall) == 0:
-            break
-        CourseeProcess = GetCourseeProcess(auth, Courseinfo['course']['CourseOpenId'])
-
-        if len(logidall) <= 10:
-            addke(auth, CourseeProcess)
-        # print(CourseeProcess['data'][index]['topics'])
-        for i in CourseeProcess['data']:
-            for j in i['topics']:
-                for k in j['cells']:
-                    for g in logidall:
-                        if k['Type'] == 1 and k['Name'] == g['Process'][1]:
-                            g['Process'][2] = k['Process']
-        time.sleep(40)
-
-
 if __name__ == "__main__":
     # 获取登陆返回的信息
     # 账户名，密码
@@ -127,39 +109,21 @@ if __name__ == "__main__":
         print(index, '模块名称：' + i['name'])
     print('请选择模块：')
     index = int(input())
+    # 需要这个
     for a in range(index, len(CourseeProcess['data'])):
-        # 需要这个
         CourseeProces = CourseeProcess['data'][a]['topics']
         # 所有要刷的课在这个列表里
 
         for i in CourseeProces:
             for j in i['cells']:
-                if j['Type'] == 2 or j['Process'] == 100:
+                # print('j----', j)
+                if j['Type'] == 1 or (j['isLearn'] and j['Process'] == 100):
+                    # print('j----', j)
                     continue
+                print('j----', j)
                 CourseeID = j['Id']
-                print('j', j)
-                try:
+                for k in range(0, 2):
                     CellInfo = GetCellInfo(auth, CourseeID, False)
-                    logId = CellInfo['logId']
-                    dis = {'Process': [j['Id'], j['Name'], j['Process']], 'logID': logId}
-                    logidall.append(dis)
-                except Exception:
-                    print("one Error")
-                    pass
-
-    t1 = threading.Thread(target=threaduplogidall, args=(auth, Courseinfo, int(index)))
-    t1.start()
-    a = 0
-    while True:
-        # print(logidall)
-        for index, i in enumerate(logidall):
-            if i['Process'][2] == 100:
-                del logidall[index]
-                continue
-            logId = i['logID']
-            # print(i['Process'][1], i['Process'][2], '%')
-            UpdateLogInfo(auth, 1, logId, logId)
-            time.sleep(5)
-        if len(logidall) == 0:
-            print("已经刷完了♪(^∇^*)")
-            break
+                    # logId = CellInfo['logId']
+                    # dis = {'Process': [j['Id'], j['Name'], j['Process']], 'logID': logId}
+                    # logidall.append(dis)
