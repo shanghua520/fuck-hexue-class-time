@@ -134,7 +134,7 @@ if __name__ == "__main__":
 
         for i in CourseeProces:
             for j in i['cells']:
-                if j['Type'] == 2 or j['Process'] == 100:
+                if j['Type'] == 2 or j['Type'] == 3 or j['Process'] == 100:
                     continue
                 CourseeID = j['Id']
                 print('j', j)
